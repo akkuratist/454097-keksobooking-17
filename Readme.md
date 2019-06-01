@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Андрей Чупраков](https://up.htmlacademy.ru/javascript/17/user/454097).
-* Наставник: `Неизвестно`.
+* Наставник: [Дмитрий Мирошниченко](https://up.htmlacademy.ru/htmlcss/24/user/591417).
 
 ---
 
