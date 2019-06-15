@@ -50,3 +50,4 @@ var renderOffers = function () {
   mainMap.classList.remove('map--faded');
 };
 
+renderOffers();
