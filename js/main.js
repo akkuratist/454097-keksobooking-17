@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 var MIN_LOCATION_Y = 130;
 var MAX_LOCATION_Y = 630;
 var MAP_PIN_HEIGHT = 70;
@@ -25,11 +25,11 @@ var createOffers = function (usersCount) {
     similarOffer.location = {
       x: (Math.random() * 1200) - (MAP_PIN_WIDTH / 2),
       y: MIN_LOCATION_Y + (Math.random() * (MAX_LOCATION_Y - MIN_LOCATION_Y)) - MAP_PIN_HEIGHT
-    }
+    };
     similarOffers.push(similarOffer);
   }
   return similarOffers;
-}
+};
 
 var renderOffer = function (similarOffer) {
   var offerElement = similarOfferPinTemplate.cloneNode(true);
