@@ -6,7 +6,7 @@ var MAP_PIN_HEIGHT = 70;
 var MAP_PIN_WIDTH = 50;
 var DEFAULT_OFFER_MESSAGE = 'Заголовок объявления';
 var OFFERS_TYPE = ['palace', 'flat', 'house', 'bungalo'];
-var offersCount = 8;
+var OFFERS_COUNT = 8;
 
 var mainMap = document.querySelector('.map');
 mainMap.classList.remove('map--faded');
@@ -51,7 +51,7 @@ var renderOffer = function (similarOffer) {
 };
 
 var renderOffers = function () {
-  var similarOffers = createOffers(offersCount);
+  var similarOffers = createOffers(OFFERS_COUNT);
   var fragment = document.createDocumentFragment();
   for (var i = 0; i < similarOffers.length; i++) {
     fragment.appendChild(renderOffer(similarOffers[i]));
