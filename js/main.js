@@ -9,7 +9,7 @@ var OFFERS_TYPE = ['palace', 'flat', 'house', 'bungalo'];
 var OFFERS_COUNT = 8;
 
 var mainMap = document.querySelector('.map');
-mainMap.classList.remove('map--faded');
+// mainMap.classList.remove('map--faded');
 
 var similarOffersList = document.querySelector('.map__pins');
 var similarOfferPinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
@@ -61,4 +61,37 @@ var renderOffers = function () {
   mainMap.classList.remove('map--faded');
 };
 
-renderOffers();
+// renderOffers();
+
+// Подробности (module4-task1)
+
+var adForm = document.querySelector('.ad-form');
+var adFormElements = adForm.querySelectorAll('.ad-form__element');
+var mainMapPin = document.querySelector('.map__pin--main');
+var offerAddress = adForm.querySelector('input[name="address"]');
+var offerAddressX = parseInt(mainMapPin.style.left, 10) + MAP_PIN_WIDTH / 2;
+var offerAddressY = parseInt(mainMapPin.style.top, 10) + MAP_PIN_HEIGHT;
+offerAddress.value = offerAddressX + ', ' + offerAddressY;
+
+var disableElements = function (elements) {
+  for (var i = 0; i < elements.length; i++) {
+    elements[i].setAttribute('disabled', 'true');
+  }
+};
+
+disableElements(adFormElements);
+
+var enableElements = function (elements) {
+  for (var i = 0; i < elements.length; i++) {
+    elements[i].removeAttribute('disabled');
+  }
+};
+
+mainMapPin.addEventListener('click', function () {
+  if (adForm.classList.contains('ad-form--disabled')) {
+    enableElements(adFormElements);
+    adForm.classList.remove('ad-form--disabled');
+    renderOffers();
+  }
+
+});
