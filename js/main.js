@@ -8,6 +8,7 @@ var DEFAULT_OFFER_MESSAGE = 'Заголовок объявления';
 var OFFERS_TYPE = ['bungalo', 'flat', 'house', 'palace'];
 var OFFERS_MIN_PRICES = [0, 1000, 5000, 10000];
 var OFFERS_COUNT = 8;
+
 var mainMap = document.querySelector('.map');
 var similarOffersList = document.querySelector('.map__pins');
 var similarOfferPinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
