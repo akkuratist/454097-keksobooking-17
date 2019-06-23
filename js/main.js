@@ -9,7 +9,6 @@ var OFFERS_TYPE = ['palace', 'flat', 'house', 'bungalo'];
 var OFFERS_COUNT = 8;
 
 var mainMap = document.querySelector('.map');
-// mainMap.classList.remove('map--faded');
 
 var similarOffersList = document.querySelector('.map__pins');
 var similarOfferPinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
@@ -71,7 +70,10 @@ var mainMapPin = document.querySelector('.map__pin--main');
 var offerAddress = adForm.querySelector('input[name="address"]');
 var offerAddressX = parseInt(mainMapPin.style.left, 10) + MAP_PIN_WIDTH / 2;
 var offerAddressY = parseInt(mainMapPin.style.top, 10) + MAP_PIN_HEIGHT;
-offerAddress.value = offerAddressX + ', ' + offerAddressY;
+
+var setAddress = function () {
+  offerAddress.value = offerAddressX + ', ' + offerAddressY;
+};
 
 var disableElements = function (elements) {
   for (var i = 0; i < elements.length; i++) {
@@ -87,11 +89,14 @@ var enableElements = function (elements) {
   }
 };
 
-mainMapPin.addEventListener('click', function () {
-  if (adForm.classList.contains('ad-form--disabled')) {
-    enableElements(adFormElements);
-    adForm.classList.remove('ad-form--disabled');
-    renderOffers();
-  }
+var activatePage = function () {
+  enableElements(adFormElements);
+  adForm.classList.remove('ad-form--disabled');
+  renderOffers();
+  mainMapPin.removeEventListener('click', activatePage);
+  offerAddress.setAttribute('disabled', true);
+};
 
-});
+mainMapPin.addEventListener('click', activatePage);
+
+mainMapPin.addEventListener('mouseup', setAddress);
