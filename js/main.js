@@ -6,10 +6,9 @@ var MAP_PIN_HEIGHT = 70;
 var MAP_PIN_WIDTH = 50;
 var DEFAULT_OFFER_MESSAGE = 'Заголовок объявления';
 var OFFERS_TYPE = ['palace', 'flat', 'house', 'bungalo'];
-var offersCount = 8;
+var OFFERS_COUNT = 8;
 
 var mainMap = document.querySelector('.map');
-mainMap.classList.remove('map--faded');
 
 var similarOffersList = document.querySelector('.map__pins');
 var similarOfferPinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
@@ -51,7 +50,7 @@ var renderOffer = function (similarOffer) {
 };
 
 var renderOffers = function () {
-  var similarOffers = createOffers(offersCount);
+  var similarOffers = createOffers(OFFERS_COUNT);
   var fragment = document.createDocumentFragment();
   for (var i = 0; i < similarOffers.length; i++) {
     fragment.appendChild(renderOffer(similarOffers[i]));
@@ -61,4 +60,43 @@ var renderOffers = function () {
   mainMap.classList.remove('map--faded');
 };
 
-renderOffers();
+// renderOffers();
+
+// Подробности (module4-task1)
+
+var adForm = document.querySelector('.ad-form');
+var adFormElements = adForm.querySelectorAll('.ad-form__element');
+var mainMapPin = document.querySelector('.map__pin--main');
+var offerAddress = adForm.querySelector('input[name="address"]');
+var offerAddressX = parseInt(mainMapPin.style.left, 10) + MAP_PIN_WIDTH / 2;
+var offerAddressY = parseInt(mainMapPin.style.top, 10) + MAP_PIN_HEIGHT;
+
+var setAddress = function () {
+  offerAddress.value = offerAddressX + ', ' + offerAddressY;
+};
+
+var disableElements = function (elements) {
+  for (var i = 0; i < elements.length; i++) {
+    elements[i].setAttribute('disabled', 'true');
+  }
+};
+
+disableElements(adFormElements);
+
+var enableElements = function (elements) {
+  for (var i = 0; i < elements.length; i++) {
+    elements[i].removeAttribute('disabled');
+  }
+};
+
+var activatePage = function () {
+  enableElements(adFormElements);
+  adForm.classList.remove('ad-form--disabled');
+  renderOffers();
+  mainMapPin.removeEventListener('click', activatePage);
+  offerAddress.setAttribute('disabled', true);
+};
+
+mainMapPin.addEventListener('click', activatePage);
+
+mainMapPin.addEventListener('mouseup', setAddress);
