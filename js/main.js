@@ -5,8 +5,12 @@ var MAX_LOCATION_X = 1200;
 var MAP_PIN_HEIGHT = 70;
 var MAP_PIN_WIDTH = 50;
 var DEFAULT_OFFER_MESSAGE = 'Заголовок объявления';
-var OFFERS_TYPE = ['bungalo', 'flat', 'house', 'palace'];
-var OFFERS_MIN_PRICES = [0, 1000, 5000, 10000];
+var OFFERS_MIN_PRICES = {
+  bungalo: 0,
+  flat: 1000,
+  house: 5000,
+  palace: 10000
+};
 var OFFERS_COUNT = 8;
 
 var mainMap = document.querySelector('.map');
@@ -30,7 +34,7 @@ var createOffers = function (usersCount) {
       avatar: 'img/avatars/user0' + i + '.png'
     };
     similarOffer.offer = {
-      type: getRandomElement(OFFERS_TYPE)
+      type: getRandomElement(roomSelect.options)
     };
     similarOffer.location = {
       x: (getRandomNumber(MAX_LOCATION_X)) - (MAP_PIN_WIDTH / 2),
@@ -119,31 +123,24 @@ mainMapPin.addEventListener('mouseup', function (evt) { // функция буд
 
 // Доверяй, но проверяй (module4-task2)
 
-var roomPrice = document.getElementById('price');
-var roomSelect = document.getElementById('type');
-var timeInSelect = document.getElementById('timein');
-var timeOutSelect = document.getElementById('timeout');
+var roomPrice = document.querySelector('#price');
+var roomSelect = document.querySelector('#type');
+var timeInSelect = document.querySelector('#timein');
+var timeOutSelect = document.querySelector('#timeout');
 
 
 var setMinPrice = function () {
-  for (var i = 0; i < roomSelect.options.length; i++) {
-    if (roomSelect.options[i].selected) {
-      roomPrice.min = OFFERS_MIN_PRICES[i];
-      roomPrice.placeholder = OFFERS_MIN_PRICES[i];
-    }
-  }
+  roomPrice.min = OFFERS_MIN_PRICES[roomSelect.value];
+  roomPrice.placeholder = roomPrice.min;
 };
 
 setMinPrice();
 
 roomSelect.addEventListener('change', setMinPrice);
 
+
 var syncSelects = function (firstSelect, secondSelect) {
-  for (var i = 0, len = secondSelect.options.length; i < len; i++) {
-    if (secondSelect.options[i].value === firstSelect.value) {
-      secondSelect.options[i].selected = true;
-    }
-  }
+  secondSelect.value = firstSelect.value;
 };
 
 timeInSelect.addEventListener('change', function () {
