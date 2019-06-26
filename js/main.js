@@ -5,13 +5,18 @@ var MAX_LOCATION_X = 1200;
 var MAP_PIN_HEIGHT = 70;
 var MAP_PIN_WIDTH = 50;
 var DEFAULT_OFFER_MESSAGE = 'Заголовок объявления';
-var OFFERS_TYPE = ['palace', 'flat', 'house', 'bungalo'];
+var OFFERS_MIN_PRICES = {
+  bungalo: 0,
+  flat: 1000,
+  house: 5000,
+  palace: 10000
+};
 var OFFERS_COUNT = 8;
 
 var mainMap = document.querySelector('.map');
-
 var similarOffersList = document.querySelector('.map__pins');
 var similarOfferPinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
+
 
 var getRandomNumber = function (number) {
   return Math.random() * number;
@@ -29,7 +34,7 @@ var createOffers = function (usersCount) {
       avatar: 'img/avatars/user0' + i + '.png'
     };
     similarOffer.offer = {
-      type: getRandomElement(OFFERS_TYPE)
+      type: getRandomElement(roomSelect.options)
     };
     similarOffer.location = {
       x: (getRandomNumber(MAX_LOCATION_X)) - (MAP_PIN_WIDTH / 2),
@@ -60,7 +65,6 @@ var renderOffers = function () {
   mainMap.classList.remove('map--faded');
 };
 
-// renderOffers();
 
 // Подробности (module4-task1)
 
@@ -68,10 +72,11 @@ var adForm = document.querySelector('.ad-form');
 var adFormElements = adForm.querySelectorAll('.ad-form__element');
 var mainMapPin = document.querySelector('.map__pin--main');
 var offerAddress = adForm.querySelector('input[name="address"]');
-var offerAddressX = parseInt(mainMapPin.style.left, 10) + MAP_PIN_WIDTH / 2;
-var offerAddressY = parseInt(mainMapPin.style.top, 10) + MAP_PIN_HEIGHT;
+
 
 var setAddress = function () {
+  var offerAddressX = parseInt(mainMapPin.style.left, 10) + (MAP_PIN_WIDTH / 2);
+  var offerAddressY = parseInt(mainMapPin.style.top, 10) + MAP_PIN_HEIGHT;
   offerAddress.value = offerAddressX + ', ' + offerAddressY;
 };
 
@@ -94,9 +99,54 @@ var activatePage = function () {
   adForm.classList.remove('ad-form--disabled');
   renderOffers();
   mainMapPin.removeEventListener('click', activatePage);
-  offerAddress.setAttribute('disabled', true);
+  offerAddress.setAttribute('readonly', true);
 };
 
 mainMapPin.addEventListener('click', activatePage);
 
-mainMapPin.addEventListener('mouseup', setAddress);
+mainMapPin.addEventListener('mouseup', function (evt) { // функция будет доработана в следующих заданиях
+  mainMapPin.style.left = evt.pageX;
+  mainMapPin.style.top = evt.pageY;
+  if (evt.pageX < (window.innerWidth - mainMap.clientWidth) / 2) {
+    evt.pageX = (window.innerWidth - mainMap.clientWidth) / 2;
+  }
+
+  if (evt.pageX > window.innerWidth - (window.innerWidth - mainMap.clientWidth) / 2) {
+    evt.pageX = window.innerWidth - (window.innerWidth - mainMap.clientWidth) / 2;
+  }
+
+  if (evt.pageY > mainMap.clientHeight - window.pageYOffset) {
+    evt.pageY = mainMap.clientHeight - window.pageYOffset;
+  }
+  setAddress();
+});
+
+// Доверяй, но проверяй (module4-task2)
+
+var roomPrice = document.querySelector('#price');
+var roomSelect = document.querySelector('#type');
+var timeInSelect = document.querySelector('#timein');
+var timeOutSelect = document.querySelector('#timeout');
+
+
+var setMinPrice = function () {
+  roomPrice.min = OFFERS_MIN_PRICES[roomSelect.value];
+  roomPrice.placeholder = roomPrice.min;
+};
+
+setMinPrice();
+
+roomSelect.addEventListener('change', setMinPrice);
+
+
+var syncSelects = function (firstSelect, secondSelect) {
+  secondSelect.value = firstSelect.value;
+};
+
+timeInSelect.addEventListener('change', function () {
+  syncSelects(timeInSelect, timeOutSelect);
+});
+
+timeOutSelect.addEventListener('change', function () {
+  syncSelects(timeOutSelect, timeInSelect);
+});
