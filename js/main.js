@@ -99,7 +99,7 @@ var activatePage = function () {
   adForm.classList.remove('ad-form--disabled');
   renderOffers();
   mainMapPin.removeEventListener('click', activatePage);
-  offerAddress.setAttribute('disabled', true);
+  offerAddress.setAttribute('readonly', true);
 };
 
 mainMapPin.addEventListener('click', activatePage);
