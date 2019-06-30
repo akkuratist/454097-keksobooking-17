@@ -1,5 +1,5 @@
 'use strict';
-var MIN_LOCATION_Y = 130;
+var MIN_LOCATION_Y = 60;
 var MAX_LOCATION_Y = 630;
 var MAX_LOCATION_X = 1200;
 var MAP_PIN_HEIGHT = 70;
@@ -104,22 +104,6 @@ var activatePage = function () {
 
 mainMapPin.addEventListener('click', activatePage);
 
-mainMapPin.addEventListener('mouseup', function (evt) { // функция будет доработана в следующих заданиях
-  mainMapPin.style.left = evt.pageX;
-  mainMapPin.style.top = evt.pageY;
-  if (evt.pageX < (window.innerWidth - mainMap.clientWidth) / 2) {
-    evt.pageX = (window.innerWidth - mainMap.clientWidth) / 2;
-  }
-
-  if (evt.pageX > window.innerWidth - (window.innerWidth - mainMap.clientWidth) / 2) {
-    evt.pageX = window.innerWidth - (window.innerWidth - mainMap.clientWidth) / 2;
-  }
-
-  if (evt.pageY > mainMap.clientHeight - window.pageYOffset) {
-    evt.pageY = mainMap.clientHeight - window.pageYOffset;
-  }
-  setAddress();
-});
 
 // Доверяй, но проверяй (module4-task2)
 
@@ -150,3 +134,53 @@ timeInSelect.addEventListener('change', function () {
 timeOutSelect.addEventListener('change', function () {
   syncSelects(timeOutSelect, timeInSelect);
 });
+
+
+// module5-task1
+
+mainMapPin.addEventListener('mousedown', function (evt) {
+  evt.preventDefault();
+
+  var startCoords = {
+    x: evt.clientX,
+    y: evt.clientY
+  };
+
+  var onMouseMove = function (moveEvt) {
+    moveEvt.preventDefault();
+
+    var shift = {
+      x: startCoords.x - moveEvt.clientX,
+      y: startCoords.y - moveEvt.clientY
+    };
+
+    startCoords = {
+      x: moveEvt.clientX,
+      y: moveEvt.clientY
+    };
+    mainMapPin.style.top = (mainMapPin.offsetTop - shift.y) + 'px';
+    mainMapPin.style.left = (mainMapPin.offsetLeft - shift.x) + 'px';
+    if (mainMapPin.offsetTop - shift.y > MAX_LOCATION_Y) {
+      mainMapPin.style.top = MAX_LOCATION_Y + 'px';
+    }
+    if (mainMapPin.offsetTop - shift.y < MIN_LOCATION_Y) {
+      mainMapPin.style.top = MIN_LOCATION_Y + 'px';
+    }
+    if (mainMapPin.offsetLeft - shift.x > mainMap.offsetWidth - mainMapPin.offsetWidth) {
+      mainMapPin.style.left = mainMap.offsetWidth - MAP_PIN_WIDTH / 2 + 'px';
+    }
+    if (mainMapPin.offsetLeft - shift.x < -(MAP_PIN_WIDTH / 2)) {
+      mainMapPin.style.left = -MAP_PIN_WIDTH / 2 + 'px';
+    }
+    setAddress();
+  };
+  var onMouseUp = function (upEvt) {
+    upEvt.preventDefault();
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+  };
+
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
+});
+
