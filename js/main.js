@@ -1,7 +1,7 @@
 'use strict';
-var MIN_LOCATION_Y = 60;
+var MIN_LOCATION_Y = 130;
 var MAX_LOCATION_Y = 630;
-var MAX_LOCATION_X = 1200;
+var MAX_LOCATION_X = mainMap.offsetWidth;
 var MAP_PIN_HEIGHT = 70;
 var MAP_PIN_HALFWIDTH = 25;
 var DEFAULT_OFFER_MESSAGE = 'Заголовок объявления';
@@ -75,7 +75,7 @@ var offerAddress = adForm.querySelector('input[name="address"]');
 
 
 var setAddress = function () {
-  var offerAddressX = parseInt(mainMapPin.style.left, 10) + (MAP_PIN_HALFWIDTH);
+  var offerAddressX = parseInt(mainMapPin.style.left, 10) + MAP_PIN_HALFWIDTH;
   var offerAddressY = parseInt(mainMapPin.style.top, 10) + MAP_PIN_HEIGHT;
   offerAddress.value = offerAddressX + ', ' + offerAddressY;
 };
@@ -147,7 +147,7 @@ mainMapPin.addEventListener('mousedown', function (evt) {
     var left = moveEvt.clientX - mainMap.offsetLeft - MAP_PIN_HALFWIDTH;
     var top = moveEvt.clientY - mainMap.offsetTop - MAP_PIN_HEIGHT;
     mainMapPin.style.left = Math.min(mainMap.offsetWidth - MAP_PIN_HALFWIDTH, Math.max(-MAP_PIN_HALFWIDTH, left)) + 'px';
-    mainMapPin.style.top = Math.min(MAX_LOCATION_Y, Math.max(MIN_LOCATION_Y, top)) + 'px';
+    mainMapPin.style.top = Math.min(MAX_LOCATION_Y, Math.max(MIN_LOCATION_Y - MAP_PIN_HEIGHT, top)) + 'px';
     setAddress();
   };
 
