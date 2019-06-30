@@ -3,7 +3,7 @@ var MIN_LOCATION_Y = 60;
 var MAX_LOCATION_Y = 630;
 var MAX_LOCATION_X = 1200;
 var MAP_PIN_HEIGHT = 70;
-var MAP_PIN_WIDTH = 50;
+var MAP_PIN_HALFWIDTH = 25;
 var DEFAULT_OFFER_MESSAGE = 'Заголовок объявления';
 var OFFERS_MIN_PRICES = {
   bungalo: 0,
@@ -37,7 +37,7 @@ var createOffers = function (usersCount) {
       type: getRandomElement(roomSelect.options)
     };
     similarOffer.location = {
-      x: (getRandomNumber(MAX_LOCATION_X)) - (MAP_PIN_WIDTH / 2),
+      x: (getRandomNumber(MAX_LOCATION_X)) - (MAP_PIN_HALFWIDTH),
       y: MIN_LOCATION_Y + (getRandomNumber(MAX_LOCATION_Y - MIN_LOCATION_Y)) - MAP_PIN_HEIGHT
     };
     similarOffers.push(similarOffer);
@@ -75,7 +75,7 @@ var offerAddress = adForm.querySelector('input[name="address"]');
 
 
 var setAddress = function () {
-  var offerAddressX = parseInt(mainMapPin.style.left, 10) + (MAP_PIN_WIDTH / 2);
+  var offerAddressX = parseInt(mainMapPin.style.left, 10) + (MAP_PIN_HALFWIDTH);
   var offerAddressY = parseInt(mainMapPin.style.top, 10) + MAP_PIN_HEIGHT;
   offerAddress.value = offerAddressX + ', ' + offerAddressY;
 };
@@ -141,39 +141,16 @@ timeOutSelect.addEventListener('change', function () {
 mainMapPin.addEventListener('mousedown', function (evt) {
   evt.preventDefault();
 
-  var startCoords = {
-    x: evt.clientX,
-    y: evt.clientY
-  };
-
   var onMouseMove = function (moveEvt) {
     moveEvt.preventDefault();
 
-    var shift = {
-      x: startCoords.x - moveEvt.clientX,
-      y: startCoords.y - moveEvt.clientY
-    };
-
-    startCoords = {
-      x: moveEvt.clientX,
-      y: moveEvt.clientY
-    };
-    mainMapPin.style.top = (mainMapPin.offsetTop - shift.y) + 'px';
-    mainMapPin.style.left = (mainMapPin.offsetLeft - shift.x) + 'px';
-    if (mainMapPin.offsetTop - shift.y > MAX_LOCATION_Y) {
-      mainMapPin.style.top = MAX_LOCATION_Y + 'px';
-    }
-    if (mainMapPin.offsetTop - shift.y < MIN_LOCATION_Y) {
-      mainMapPin.style.top = MIN_LOCATION_Y + 'px';
-    }
-    if (mainMapPin.offsetLeft - shift.x > mainMap.offsetWidth - mainMapPin.offsetWidth) {
-      mainMapPin.style.left = mainMap.offsetWidth - MAP_PIN_WIDTH / 2 + 'px';
-    }
-    if (mainMapPin.offsetLeft - shift.x < -(MAP_PIN_WIDTH / 2)) {
-      mainMapPin.style.left = -MAP_PIN_WIDTH / 2 + 'px';
-    }
+    var left = moveEvt.clientX - mainMap.offsetLeft - MAP_PIN_HALFWIDTH;
+    var top = moveEvt.clientY - mainMap.offsetTop - MAP_PIN_HEIGHT;
+    mainMapPin.style.left = Math.min(mainMap.offsetWidth - MAP_PIN_HALFWIDTH, Math.max(-MAP_PIN_HALFWIDTH, left)) + 'px';
+    mainMapPin.style.top = Math.min(MAX_LOCATION_Y, Math.max(MIN_LOCATION_Y, top)) + 'px';
     setAddress();
   };
+
   var onMouseUp = function (upEvt) {
     upEvt.preventDefault();
     document.removeEventListener('mousemove', onMouseMove);
