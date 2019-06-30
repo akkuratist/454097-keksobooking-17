@@ -1,9 +1,9 @@
 'use strict';
-var MIN_LOCATION_Y = 130;
+var MIN_LOCATION_Y = 60;
 var MAX_LOCATION_Y = 630;
 var MAX_LOCATION_X = 1200;
 var MAP_PIN_HEIGHT = 70;
-var MAP_PIN_WIDTH = 50;
+var MAP_PIN_HALFWIDTH = 25;
 var DEFAULT_OFFER_MESSAGE = 'Заголовок объявления';
 var OFFERS_MIN_PRICES = {
   bungalo: 0,
@@ -37,7 +37,7 @@ var createOffers = function (usersCount) {
       type: getRandomElement(roomSelect.options)
     };
     similarOffer.location = {
-      x: (getRandomNumber(MAX_LOCATION_X)) - (MAP_PIN_WIDTH / 2),
+      x: (getRandomNumber(MAX_LOCATION_X)) - (MAP_PIN_HALFWIDTH),
       y: MIN_LOCATION_Y + (getRandomNumber(MAX_LOCATION_Y - MIN_LOCATION_Y)) - MAP_PIN_HEIGHT
     };
     similarOffers.push(similarOffer);
@@ -75,7 +75,7 @@ var offerAddress = adForm.querySelector('input[name="address"]');
 
 
 var setAddress = function () {
-  var offerAddressX = parseInt(mainMapPin.style.left, 10) + (MAP_PIN_WIDTH / 2);
+  var offerAddressX = parseInt(mainMapPin.style.left, 10) + (MAP_PIN_HALFWIDTH);
   var offerAddressY = parseInt(mainMapPin.style.top, 10) + MAP_PIN_HEIGHT;
   offerAddress.value = offerAddressX + ', ' + offerAddressY;
 };
@@ -104,22 +104,6 @@ var activatePage = function () {
 
 mainMapPin.addEventListener('click', activatePage);
 
-mainMapPin.addEventListener('mouseup', function (evt) { // функция будет доработана в следующих заданиях
-  mainMapPin.style.left = evt.pageX;
-  mainMapPin.style.top = evt.pageY;
-  if (evt.pageX < (window.innerWidth - mainMap.clientWidth) / 2) {
-    evt.pageX = (window.innerWidth - mainMap.clientWidth) / 2;
-  }
-
-  if (evt.pageX > window.innerWidth - (window.innerWidth - mainMap.clientWidth) / 2) {
-    evt.pageX = window.innerWidth - (window.innerWidth - mainMap.clientWidth) / 2;
-  }
-
-  if (evt.pageY > mainMap.clientHeight - window.pageYOffset) {
-    evt.pageY = mainMap.clientHeight - window.pageYOffset;
-  }
-  setAddress();
-});
 
 // Доверяй, но проверяй (module4-task2)
 
@@ -150,3 +134,30 @@ timeInSelect.addEventListener('change', function () {
 timeOutSelect.addEventListener('change', function () {
   syncSelects(timeOutSelect, timeInSelect);
 });
+
+
+// module5-task1
+
+mainMapPin.addEventListener('mousedown', function (evt) {
+  evt.preventDefault();
+
+  var onMouseMove = function (moveEvt) {
+    moveEvt.preventDefault();
+
+    var left = moveEvt.clientX - mainMap.offsetLeft - MAP_PIN_HALFWIDTH;
+    var top = moveEvt.clientY - mainMap.offsetTop - MAP_PIN_HEIGHT;
+    mainMapPin.style.left = Math.min(mainMap.offsetWidth - MAP_PIN_HALFWIDTH, Math.max(-MAP_PIN_HALFWIDTH, left)) + 'px';
+    mainMapPin.style.top = Math.min(MAX_LOCATION_Y, Math.max(MIN_LOCATION_Y, top)) + 'px';
+    setAddress();
+  };
+
+  var onMouseUp = function (upEvt) {
+    upEvt.preventDefault();
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+  };
+
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
+});
+
