@@ -13,6 +13,7 @@
     palace: 10000
   };
   var OFFERS_COUNT = 8;
+  var DATA_URL = 'https://js.dump.academy/keksobooking/data';
 
   window.data = {
     MIN_LOCATION_Y: MIN_LOCATION_Y,
@@ -22,7 +23,8 @@
     MAP_PIN_HEIGHT: MAP_PIN_HEIGHT,
     DEFAULT_OFFER_MESSAGE: DEFAULT_OFFER_MESSAGE,
     OFFERS_MIN_PRICES: OFFERS_MIN_PRICES,
-    OFFERS_COUNT: OFFERS_COUNT
+    OFFERS_COUNT: OFFERS_COUNT,
+    DATA_URL: DATA_URL
   };
 })();
 

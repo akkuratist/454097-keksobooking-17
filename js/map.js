@@ -4,24 +4,6 @@
   var similarOffersList = document.querySelector('.map__pins');
   var similarOfferPinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
   var mainMapPin = document.querySelector('.map__pin--main');
-  var createOffers = function (usersCount) {
-    var similarOffers = [];
-    for (var i = 1; i <= usersCount; i++) {
-      var similarOffer = {};
-      similarOffer.author = {
-        avatar: 'img/avatars/user0' + i + '.png'
-      };
-      similarOffer.offer = {
-        type: window.util.getRandomElement(window.form.roomSelect.options)
-      };
-      similarOffer.location = {
-        x: (window.util.getRandomNumber(window.data.MAX_LOCATION_X)) - window.data.MAP_PIN_HALFWIDTH,
-        y: window.data.MIN_LOCATION_Y + (window.util.getRandomNumber(window.data.MAX_LOCATION_Y - window.data.MIN_LOCATION_Y)) - window.data.MAP_PIN_HEIGHT
-      };
-      similarOffers.push(similarOffer);
-    }
-    return similarOffers;
-  };
 
   var renderOffer = function (similarOffer) {
     var offerElement = similarOfferPinTemplate.cloneNode(true);
@@ -32,16 +14,22 @@
     return offerElement;
   };
 
-  var renderOffers = function () {
-    var similarOffers = createOffers(window.data.OFFERS_COUNT);
+  var successHandler = function (offers) {
     var fragment = document.createDocumentFragment();
-    for (var i = 0; i < similarOffers.length; i++) {
-      fragment.appendChild(renderOffer(similarOffers[i]));
+    for (var i = 0; i <= window.data.OFFERS_COUNT; i++) {
+      fragment.appendChild(renderOffer(offers[i]));
     }
     similarOffersList.appendChild(fragment);
     mainMap.classList.remove('map--faded');
   };
 
+  var errorHandler = function () {
+    var errorMessageTemplate = document.querySelector('#error').content.querySelector('.error');
+    var errorMessage = errorMessageTemplate.cloneNode(true);
+    document.body.insertBefore(errorMessage, document.body.children[2]);
+  };
+
+  var renderOffers = window.load(window.data.DATA_URL, successHandler, errorHandler);
 
   window.map = {
     mainMap: mainMap,
@@ -49,3 +37,4 @@
     renderOffers: renderOffers
   };
 })();
+

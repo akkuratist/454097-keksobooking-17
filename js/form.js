@@ -44,12 +44,10 @@
 
   mainMapPin.addEventListener('click', activatePage);
 
-
   window.form = {
     adForm: adForm,
     roomSelect: roomSelect,
     adFormElements: adFormElements,
     offerAddress: offerAddress
-
   };
 })();
