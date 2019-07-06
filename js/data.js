@@ -6,7 +6,7 @@
   var MAP_PIN_HEIGHT = 70;
   var MAP_PIN_HALFWIDTH = 25;
   var DEFAULT_OFFER_MESSAGE = 'Заголовок объявления';
-  var OFFERS_MIN_PRICES = {
+  var OffersMinPirce = {
     bungalo: 0,
     flat: 1000,
     house: 5000,
@@ -22,7 +22,7 @@
     MAP_PIN_HALFWIDTH: MAP_PIN_HALFWIDTH,
     MAP_PIN_HEIGHT: MAP_PIN_HEIGHT,
     DEFAULT_OFFER_MESSAGE: DEFAULT_OFFER_MESSAGE,
-    OFFERS_MIN_PRICES: OFFERS_MIN_PRICES,
+    OFFERS_MIN_PRICES: OffersMinPirce,
     OFFERS_COUNT: OFFERS_COUNT,
     DATA_URL: DATA_URL
   };
