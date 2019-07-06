@@ -14,13 +14,12 @@
     return offerElement;
   };
 
-  var successHandler = function (offers) {
+  var renderOffers = function (offers) {
     var fragment = document.createDocumentFragment();
     for (var i = 0; i <= window.data.OFFERS_COUNT; i++) {
       fragment.appendChild(renderOffer(offers[i]));
     }
     similarOffersList.appendChild(fragment);
-    mainMap.classList.remove('map--faded');
   };
 
   var errorHandler = function () {
@@ -29,12 +28,11 @@
     document.body.insertBefore(errorMessage, document.body.children[2]);
   };
 
-  var renderOffers = window.load(window.data.DATA_URL, successHandler, errorHandler);
-
   window.map = {
     mainMap: mainMap,
     mainMapPin: mainMapPin,
-    renderOffers: renderOffers
+    renderOffers: renderOffers,
+    errorHandler: errorHandler
   };
 })();
 
