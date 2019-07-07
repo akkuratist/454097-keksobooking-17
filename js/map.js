@@ -16,7 +16,7 @@
 
   var renderOffers = function (offers) {
     var fragment = document.createDocumentFragment();
-    for (var i = 0; i <= window.data.OFFERS_COUNT; i++) {
+    for (var i = 0; i < offers.length; i++) {
       fragment.appendChild(renderOffer(offers[i]));
     }
     similarOffersList.appendChild(fragment);

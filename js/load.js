@@ -1,6 +1,6 @@
 'use strict';
 (function () {
-  window.load = function (url, onSuccess, onError) {
+  var loadData = function (url, onSuccess, onError) {
     var xhr = new XMLHttpRequest();
 
     xhr.responseType = 'json';
@@ -21,9 +21,14 @@
       onError('Запрос не успел выполниться за ' + xhr.timeout / 1000 + 'секунд');
     });
 
-    xhr.timeout = 20000; // 10s
+    xhr.timeout = 10000; // 10s
 
     xhr.open('GET', url);
     xhr.send();
   };
+
+  window.load = {
+    loadData: loadData
+  };
+
 })();

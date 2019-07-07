@@ -12,7 +12,6 @@
     house: 5000,
     palace: 10000
   };
-  var OFFERS_COUNT = 8;
   var DATA_URL = 'https://js.dump.academy/keksobooking/data';
 
   window.data = {
@@ -23,7 +22,6 @@
     MAP_PIN_HEIGHT: MAP_PIN_HEIGHT,
     DEFAULT_OFFER_MESSAGE: DEFAULT_OFFER_MESSAGE,
     OffersMinPrice: OffersMinPrice,
-    OFFERS_COUNT: OFFERS_COUNT,
     DATA_URL: DATA_URL
   };
 })();
