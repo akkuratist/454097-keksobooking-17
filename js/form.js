@@ -13,7 +13,7 @@
   window.util.disableElements(adFormElements);
 
   var setMinPrice = function () {
-    roomPrice.min = window.data.OFFERS_MIN_PRICES[roomSelect.value];
+    roomPrice.min = window.data.OffersMinPrice[roomSelect.value];
     roomPrice.placeholder = roomPrice.min;
   };
 
@@ -36,20 +36,19 @@
 
   var activatePage = function () {
     window.util.enableElements(adFormElements);
+    window.map.mainMap.classList.remove('map--faded');
     adForm.classList.remove('ad-form--disabled');
-    window.map.renderOffers();
+    window.load.loadData(window.data.DATA_URL, window.map.renderOffers, window.map.errorHandler);
     mainMapPin.removeEventListener('click', activatePage);
     offerAddress.setAttribute('readonly', true);
   };
 
   mainMapPin.addEventListener('click', activatePage);
 
-
   window.form = {
     adForm: adForm,
     roomSelect: roomSelect,
     adFormElements: adFormElements,
     offerAddress: offerAddress
-
   };
 })();
