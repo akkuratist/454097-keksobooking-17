@@ -16,7 +16,6 @@
     roomPrice.min = window.data.OffersMinPrice[roomSelect.value];
     roomPrice.placeholder = roomPrice.min;
   };
-
   setMinPrice();
 
   var syncSelects = function (firstSelect, secondSelect) {
@@ -38,7 +37,7 @@
     window.util.enableElements(adFormElements);
     window.map.mainMap.classList.remove('map--faded');
     adForm.classList.remove('ad-form--disabled');
-    window.load.loadData(window.data.DATA_URL, window.map.renderOffers, window.map.errorHandler);
+    window.load.loadData(window.data.DATA_URL, window.map.renderOffers, window.util.errorHandler);
     mainMapPin.removeEventListener('click', activatePage);
     offerAddress.setAttribute('readonly', true);
   };

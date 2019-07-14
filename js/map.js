@@ -5,6 +5,17 @@
   var similarOfferPinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
   var mainMapPin = document.querySelector('.map__pin--main');
 
+  var offers = [];
+  var housingType = document.querySelector('#housing-type');
+
+  var clearMap = function () {
+    var offerPins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+
+    offerPins.forEach(function (offerPin) {
+      offerPin.remove();
+    });
+  };
+
   var renderOffer = function (similarOffer) {
     var offerElement = similarOfferPinTemplate.cloneNode(true);
     var offerElementImage = offerElement.querySelector('img');
@@ -14,25 +25,40 @@
     return offerElement;
   };
 
-  var renderOffers = function (offers) {
+  var renderOffers = function (offerList) {
+    offerList = offerList.slice(0, 5);
     var fragment = document.createDocumentFragment();
-    for (var i = 0; i < offers.length; i++) {
+    for (var i = 0; i < offerList.length; i++) {
       fragment.appendChild(renderOffer(offers[i]));
     }
     similarOffersList.appendChild(fragment);
   };
 
-  var errorHandler = function () {
-    var errorMessageTemplate = document.querySelector('#error').content.querySelector('.error');
-    var errorMessage = errorMessageTemplate.cloneNode(true);
-    document.body.insertBefore(errorMessage, document.body.children[2]);
+  var updateOffers = function () {
+    clearMap();
+    var filteredOffers = offers.filter(function (offer) {
+      return offer.offer.type === housingType.value || housingType === 'any';
+    });
+    renderOffers(filteredOffers);
+    // console.log(filteredOffers);
   };
+
+  housingType.addEventListener('change', updateOffers);
+
+
+  var successHandler = function (data) {
+    offers = data;
+  };
+
+
+  window.load.loadData(window.data.DATA_URL, successHandler, window.util.errorHandler);
 
   window.map = {
     mainMap: mainMap,
     mainMapPin: mainMapPin,
     renderOffers: renderOffers,
-    errorHandler: errorHandler
+    similarOffersList: similarOffersList,
+    clearMap: clearMap
   };
 })();
 

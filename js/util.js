@@ -20,10 +20,17 @@
     }
   };
 
+  var errorHandler = function () {
+    var errorMessageTemplate = document.querySelector('#error').content.querySelector('.error');
+    var errorMessage = errorMessageTemplate.cloneNode(true);
+    document.body.insertBefore(errorMessage, document.body.children[0]);
+  };
+
   window.util = {
     getRandomElement: getRandomElement,
     getRandomNumber: getRandomNumber,
     disableElements: disableElements,
     enableElements: enableElements,
+    errorHandler: errorHandler
   };
 })();
