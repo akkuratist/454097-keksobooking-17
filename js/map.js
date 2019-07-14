@@ -25,22 +25,26 @@
     return offerElement;
   };
 
-  var renderOffers = function (offerList) {
-    offerList = offers.slice(0, 5);
+  var renderOffers = function () {
+    var offersList = filterOffers();
     var fragment = document.createDocumentFragment();
-    offerList.forEach(function (offer) {
+    offersList.forEach(function (offer) {
       fragment.appendChild(renderOffer(offer));
     });
     similarOffersList.appendChild(fragment);
   };
 
+  var filterOffers = function () {
+    var filteredOffers = offers.filter(function (offer) {
+      return offer.offer.type === housingType.value || housingType.value === 'any';
+    });
+    return filteredOffers.slice(0, 5);
+  };
+
   var updateOffers = function () {
     clearMap();
-    var filteredOffers = offers.filter(function (offer) {
-      return offer.offer.type === housingType.value || housingType === 'any';
-    });
-    renderOffers(filteredOffers);
-    // console.log(filteredOffers);
+    filterOffers();
+    renderOffers(filterOffers());
   };
 
   housingType.addEventListener('change', updateOffers);
@@ -50,7 +54,6 @@
     offers = data;
     return offers;
   };
-
 
   window.load.loadData(window.data.DATA_URL, successHandler, window.util.errorHandler);
 
