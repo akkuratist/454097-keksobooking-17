@@ -44,7 +44,7 @@
   var updateOffers = function () {
     clearMap();
     filterOffers();
-    renderOffers(filterOffers());
+    renderOffers();
   };
 
   housingType.addEventListener('change', updateOffers);
