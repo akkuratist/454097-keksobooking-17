@@ -37,7 +37,7 @@
     window.util.enableElements(adFormElements);
     window.map.mainMap.classList.remove('map--faded');
     adForm.classList.remove('ad-form--disabled');
-    window.load.loadData(window.data.DATA_URL, window.map.renderOffers, window.util.errorHandler);
+    window.map.renderOffers();
     mainMapPin.removeEventListener('click', activatePage);
     offerAddress.setAttribute('readonly', true);
   };

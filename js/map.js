@@ -26,11 +26,11 @@
   };
 
   var renderOffers = function (offerList) {
-    offerList = offerList.slice(0, 5);
+    offerList = offers.slice(0, 5);
     var fragment = document.createDocumentFragment();
-    for (var i = 0; i < offerList.length; i++) {
-      fragment.appendChild(renderOffer(offers[i]));
-    }
+    offerList.forEach(function (offer) {
+      fragment.appendChild(renderOffer(offer));
+    });
     similarOffersList.appendChild(fragment);
   };
 
@@ -48,6 +48,7 @@
 
   var successHandler = function (data) {
     offers = data;
+    return offers;
   };
 
 
@@ -58,7 +59,8 @@
     mainMapPin: mainMapPin,
     renderOffers: renderOffers,
     similarOffersList: similarOffersList,
-    clearMap: clearMap
+    clearMap: clearMap,
+    offers: offers,
+    successHandler: successHandler
   };
 })();
-
