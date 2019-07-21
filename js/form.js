@@ -53,9 +53,6 @@
 
     if (guestsSelect.value !== roomSelect.value) {
       syncSelects(roomSelect, guestsSelect);
-      guestsSelect.setCustomValidity('Нельзя размещать больше 1 гостя в комнате');
-    } else {
-      guestsSelect.setCustomValidity('');
     }
 
     if (roomSelect.value === '100') {
@@ -63,9 +60,6 @@
     }
 
   };
-
-  roomSelect.addEventListener('change', setCapacity);
-
 
   var activatePage = function () {
     window.util.enableElements(adFormElements);
@@ -77,7 +71,48 @@
     setCapacity();
   };
 
+  var deactivatePage = function () {
+    window.card.closeCard();
+    window.util.disableElements(adFormElements);
+    window.map.mainMap.classList.add('map--faded');
+    adForm.classList.add('ad-form--disabled');
+    window.map.clearMap();
+    mainMapPin.addEventListener('click', activatePage);
+    adForm.reset();
+    window.pin.setDefaultAddress();
+  };
+
+  var adFormSuccessHandler = function () {
+    var successMessageTemplate = document.querySelector('#success').content.querySelector('.success');
+    var successMessage = successMessageTemplate.cloneNode(true);
+    var onEscPress = function (evt) {
+      evt.preventDefault();
+      if (evt.keyCode === window.util.KeyCodes.ESC) {
+        successMessage.remove();
+        document.removeEventListener('keydown', onEscPress);
+        document.removeEventListener('click', onMouseClick);
+      }
+    };
+    var onMouseClick = function (evt) {
+      evt.preventDefault();
+      successMessage.remove();
+      document.removeEventListener('click', onMouseClick);
+      document.removeEventListener('keydown', onEscPress);
+    };
+    document.addEventListener('click', onMouseClick);
+    document.addEventListener('keydown', onEscPress);
+    document.body.insertBefore(successMessage, document.body.children[0]);
+    deactivatePage();
+  };
+
+
   mainMapPin.addEventListener('click', activatePage);
+  roomSelect.addEventListener('change', setCapacity);
+
+  adForm.addEventListener('submit', function (evt) {
+    window.load.uploadData(new FormData(adForm), adFormSuccessHandler, window.util.errorHandler);
+    evt.preventDefault();
+  });
 
   window.form = {
     adForm: adForm,

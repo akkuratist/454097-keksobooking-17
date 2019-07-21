@@ -61,6 +61,7 @@
     var offerTime = offerCardElement.querySelector('.popup__text--time');
     var offerDescription = offerCardElement.querySelector('.popup__description');
     var closeCardButton = offerCardElement.querySelector('.popup__close');
+
     closeCardButton.addEventListener('click', closeCard);
     offerAuthor.src = data.author.avatar;
     offerTitle.textContent = data.offer.title;
@@ -79,11 +80,12 @@
   var closeCard = function () {
     var card = document.querySelector('.map__card');
     if (card) {
-      document.removeEventListener('keydown', onEscPressCard);
-      card.querySelector('.popup__close').removeEventListener('click', closeCard);
-      card.remove();
       var currentOffer = document.querySelector('.map__pin--active');
-      currentOffer.classList.remove('map__pin--active');
+      document.removeEventListener('keydown', onEscPressCard);
+      card.remove();
+      if (currentOffer) {
+        currentOffer.classList.remove('map__pin--active');
+      }
     }
   };
 

@@ -37,8 +37,7 @@
       fragment.appendChild(renderOffer(offer));
     });
     similarOffersList.appendChild(fragment);
-    window.card.showCard(filterOffers()[Math.floor(Math.random() * filterOffers().length)]);
-
+    window.card.showCard(filterOffers()[Math.round(Math.random() * filterOffers().length - 0.5)]);
   };
 
   var filterOffers = function () {
