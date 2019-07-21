@@ -13,6 +13,12 @@
     palace: 10000
   };
   var DATA_URL = 'https://js.dump.academy/keksobooking/data';
+  var OffersType = {
+    bungalo: 'Бунгало',
+    flat: 'Квартира',
+    house: 'Дом',
+    palace: 'Дворец'
+  };
 
   window.data = {
     MIN_LOCATION_Y: MIN_LOCATION_Y,
@@ -22,6 +28,7 @@
     MAP_PIN_HEIGHT: MAP_PIN_HEIGHT,
     DEFAULT_OFFER_MESSAGE: DEFAULT_OFFER_MESSAGE,
     OffersMinPrice: OffersMinPrice,
+    OffersType: OffersType,
     DATA_URL: DATA_URL
   };
 })();

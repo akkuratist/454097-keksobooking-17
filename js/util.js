@@ -1,5 +1,10 @@
 'use strict';
 (function () {
+  var KeyCodes = {
+    ENTER: 13,
+    ESC: 27
+  };
+
   var getRandomNumber = function (number) {
     return Math.random() * number;
   };
@@ -31,6 +36,7 @@
     getRandomNumber: getRandomNumber,
     disableElements: disableElements,
     enableElements: enableElements,
-    errorHandler: errorHandler
+    errorHandler: errorHandler,
+    KeyCodes: KeyCodes
   };
 })();
