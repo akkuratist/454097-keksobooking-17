@@ -14,9 +14,9 @@
   };
 
   var disableElements = function (elements) {
-    for (var i = 0; i < elements.length; i++) {
-      elements[i].setAttribute('disabled', 'true');
-    }
+    elements.forEach(function (elem) {
+      elem.setAttribute('disabled', 'true');
+    });
   };
 
   var enableElements = function (elements) {
@@ -28,6 +28,20 @@
   var errorHandler = function () {
     var errorMessageTemplate = document.querySelector('#error').content.querySelector('.error');
     var errorMessage = errorMessageTemplate.cloneNode(true);
+    var errorButton = errorMessage.querySelector('.error__button');
+    var onEscPress = function (evt) {
+      evt.preventDefault();
+      if (evt.keyCode === KeyCodes.ESC) {
+        errorMessage.remove();
+        document.removeEventListener('keydown', onEscPress);
+      }
+    };
+    var onMouseClick = function (evt) {
+      evt.preventDefault();
+      errorMessage.remove();
+    };
+    document.addEventListener('keydown', onEscPress);
+    errorButton.addEventListener('click', onMouseClick);
     document.body.insertBefore(errorMessage, document.body.children[0]);
   };
 

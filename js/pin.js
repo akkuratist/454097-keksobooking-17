@@ -1,9 +1,17 @@
 'use strict';
 (function () {
+  var DEFAULT_ADDRESS_X = 570;
+  var DEFAULT_ADDRESS_Y = 375;
   var setAddress = function () {
     var offerAddressX = parseInt(window.map.mainMapPin.style.left, 10) + window.data.MAP_PIN_HALFWIDTH;
     var offerAddressY = parseInt(window.map.mainMapPin.style.top, 10) + window.data.MAP_PIN_HEIGHT;
     window.form.offerAddress.value = offerAddressX + ', ' + offerAddressY;
+  };
+
+  var setDefaultAddress = function () {
+    window.map.mainMapPin.style.left = DEFAULT_ADDRESS_X + 'px';
+    window.map.mainMapPin.style.top = DEFAULT_ADDRESS_Y + 'px';
+    setAddress();
   };
 
   window.map.mainMapPin.addEventListener('mousedown', function (evt) {
@@ -27,4 +35,10 @@
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
   });
+
+  setAddress();
+  window.pin = {
+    setAddress: setAddress,
+    setDefaultAddress: setDefaultAddress
+  };
 })();
