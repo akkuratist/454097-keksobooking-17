@@ -1,7 +1,9 @@
 'use strict';
 (function () {
-  var DEFAULT_ADDRESS_X = 570;
-  var DEFAULT_ADDRESS_Y = 375;
+  var DefaultAddress = {
+    X: 570,
+    Y: 375
+  };
   var setAddress = function () {
     var offerAddressX = parseInt(window.map.mainMapPin.style.left, 10) + window.data.MAP_PIN_HALFWIDTH;
     var offerAddressY = parseInt(window.map.mainMapPin.style.top, 10) + window.data.MAP_PIN_HEIGHT;
@@ -9,8 +11,8 @@
   };
 
   var setDefaultAddress = function () {
-    window.map.mainMapPin.style.left = DEFAULT_ADDRESS_X + 'px';
-    window.map.mainMapPin.style.top = DEFAULT_ADDRESS_Y + 'px';
+    window.map.mainMapPin.style.left = DefaultAddress.X + 'px';
+    window.map.mainMapPin.style.top = DefaultAddress.Y + 'px';
     setAddress();
   };
 
