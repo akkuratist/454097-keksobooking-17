@@ -12,8 +12,7 @@
     house: 5000,
     palace: 10000
   };
-  var DATA_URL = 'https://js.dump.academy/keksobooking/data';
-  var FORM_URL = 'https://js.dump.academy/keksobooking';
+
   var OffersType = {
     bungalo: 'Бунгало',
     flat: 'Квартира',
@@ -30,8 +29,6 @@
     DEFAULT_OFFER_MESSAGE: DEFAULT_OFFER_MESSAGE,
     OffersMinPrice: OffersMinPrice,
     OffersType: OffersType,
-    DATA_URL: DATA_URL,
-    FORM_URL: FORM_URL
   };
 })();
 

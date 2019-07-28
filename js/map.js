@@ -1,5 +1,6 @@
 'use strict';
 (function () {
+  var filters = document.querySelector('.map__filters');
   var mainMap = document.querySelector('.map');
   var similarOffersList = document.querySelector('.map__pins');
   var similarOfferPinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
@@ -7,9 +8,8 @@
   var pins = similarOffersList.querySelectorAll('.map__pin:not(.map__pin--main)');
 
   var offers = [];
-  var housingType = document.querySelector('#housing-type');
-
   var clearMap = function () {
+    window.card.closeCard();
     var offerPins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
 
     offerPins.forEach(function (offerPin) {
@@ -30,29 +30,35 @@
     return offerElement;
   };
 
-  var renderOffers = function () {
-    var offersList = filterOffers();
+  var renderOffers = function (offersList) {
     var fragment = document.createDocumentFragment();
     offersList.forEach(function (offer) {
       fragment.appendChild(renderOffer(offer));
     });
     similarOffersList.appendChild(fragment);
-    window.card.showCard(filterOffers()[Math.round(Math.random() * filterOffers().length - 0.5)]);
   };
 
-  var filterOffers = function () {
+  var getFilteredOffers = function () {
     var filteredOffers = offers.filter(function (offer) {
-      return offer.offer.type === housingType.value || housingType.value === 'any';
+      return window.filters.filterOffers(offer);
     });
     return filteredOffers.slice(0, 5);
   };
 
   var updateOffers = function () {
     clearMap();
-    renderOffers();
+    renderOffers(getFilteredOffers());
   };
 
-  housingType.addEventListener('change', updateOffers);
+
+  filters.addEventListener('change', function (evt) {
+    if (evt.target.name !== 'features') {
+      window.filters.filtersMap[evt.target.name](evt.target.value);
+    }
+
+    window.debounce(updateOffers);
+
+  });
 
 
   var successHandler = function (data) {
@@ -60,12 +66,13 @@
     return offers;
   };
 
-  window.load.loadData(window.data.DATA_URL, successHandler, window.util.errorHandler);
+  window.load.load(window.load.Url.DATA_URL, successHandler, window.util.errorHandler, window.load.Methods.GET);
 
   window.map = {
     mainMap: mainMap,
     pins: pins,
     mainMapPin: mainMapPin,
+    getFilteredOffers: getFilteredOffers,
     renderOffers: renderOffers,
     similarOffersList: similarOffersList,
     clearMap: clearMap,

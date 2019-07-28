@@ -18,6 +18,7 @@
   var timeOutSelect = document.querySelector('#timeout');
   var roomSelect = document.querySelector('#room_number');
   var guestsSelect = document.querySelector('#capacity');
+  var successMessageTemplate = document.querySelector('#success').content.querySelector('.success');
 
 
   window.util.disableElements(adFormElements);
@@ -65,7 +66,7 @@
     window.util.enableElements(adFormElements);
     window.map.mainMap.classList.remove('map--faded');
     adForm.classList.remove('ad-form--disabled');
-    window.map.renderOffers();
+    window.map.renderOffers(window.map.getFilteredOffers());
     mainMapPin.removeEventListener('click', activatePage);
     offerAddress.setAttribute('readonly', true);
     setCapacity();
@@ -82,27 +83,32 @@
     window.pin.setDefaultAddress();
   };
 
+  var onEscPress = function (evt) {
+    evt.preventDefault();
+    if (evt.keyCode === window.util.KeyCodes.ESC) {
+      closeSuccessMessage();
+    }
+  };
+  var onMouseClick = function (evt) {
+    evt.preventDefault();
+    closeSuccessMessage();
+  };
+
   var adFormSuccessHandler = function () {
-    var successMessageTemplate = document.querySelector('#success').content.querySelector('.success');
     var successMessage = successMessageTemplate.cloneNode(true);
-    var onEscPress = function (evt) {
-      evt.preventDefault();
-      if (evt.keyCode === window.util.KeyCodes.ESC) {
-        successMessage.remove();
-        document.removeEventListener('keydown', onEscPress);
-        document.removeEventListener('click', onMouseClick);
-      }
-    };
-    var onMouseClick = function (evt) {
-      evt.preventDefault();
-      successMessage.remove();
-      document.removeEventListener('click', onMouseClick);
-      document.removeEventListener('keydown', onEscPress);
-    };
-    document.addEventListener('click', onMouseClick);
+    successMessage.addEventListener('click', onMouseClick);
     document.addEventListener('keydown', onEscPress);
     document.body.insertBefore(successMessage, document.body.children[0]);
     deactivatePage();
+  };
+
+  var closeSuccessMessage = function () {
+    var successMessage = document.querySelector('.success');
+    if (successMessage) {
+      successMessage.remove();
+      document.removeEventListener('keydown', onEscPress);
+      document.removeEventListener('click', onMouseClick);
+    }
   };
 
 
@@ -110,7 +116,7 @@
   roomSelect.addEventListener('change', setCapacity);
 
   adForm.addEventListener('submit', function (evt) {
-    window.load.uploadData(new FormData(adForm), adFormSuccessHandler, window.util.errorHandler);
+    window.load.load(window.load.Url.FORM_URL, adFormSuccessHandler, window.util.errorHandler, window.load.Methods.POST, new FormData(adForm));
     evt.preventDefault();
   });
 
