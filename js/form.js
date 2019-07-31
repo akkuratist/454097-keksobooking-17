@@ -19,6 +19,7 @@
   var roomSelect = document.querySelector('#room_number');
   var guestsSelect = document.querySelector('#capacity');
   var successMessageTemplate = document.querySelector('#success').content.querySelector('.success');
+  var resetButton = adForm.querySelector('.ad-form__reset');
 
 
   window.util.disableElements(adFormElements);
@@ -74,6 +75,8 @@
 
   var deactivatePage = function () {
     window.card.closeCard();
+    window.photos.setDefaultAvatar();
+    window.photos.clearPhotos();
     window.util.disableElements(adFormElements);
     window.map.mainMap.classList.add('map--faded');
     adForm.classList.add('ad-form--disabled');
@@ -118,6 +121,10 @@
   adForm.addEventListener('submit', function (evt) {
     window.load.load(window.load.Url.FORM_URL, adFormSuccessHandler, window.util.errorHandler, window.load.Methods.POST, new FormData(adForm));
     evt.preventDefault();
+  });
+
+  resetButton.addEventListener('click', function () {
+    deactivatePage();
   });
 
   window.form = {
