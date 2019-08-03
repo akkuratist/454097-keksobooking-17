@@ -90,7 +90,7 @@
     disableFormElements();
     window.map.main.classList.add('map--faded');
     adForm.classList.add('ad-form--disabled');
-    window.map.clearMap();
+    window.map.clear();
     window.map.clearFilters();
     window.map.mainPin.addEventListener('click', onMainPinClick);
     adForm.reset();
@@ -117,6 +117,10 @@
     successMessage.addEventListener('click', onMouseClick);
     document.addEventListener('keydown', onEscPress);
     document.body.insertBefore(successMessage, document.body.children[0]);
+  };
+
+  var onAdFormSubmit = function () {
+    showSuccessMessage();
     deactivatePage();
   };
 
@@ -136,7 +140,7 @@
   });
 
   adForm.addEventListener('submit', function (evt) {
-    window.backend.load(window.backend.Url.FORM_URL, showSuccessMessage, window.util.onError, window.backend.Methods.POST, new FormData(adForm));
+    window.backend.load(window.backend.Url.FORM_URL, onAdFormSubmit, window.util.onError, window.backend.Methods.POST, new FormData(adForm));
     evt.preventDefault();
   });
 
