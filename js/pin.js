@@ -1,30 +1,37 @@
 'use strict';
 (function () {
+  var MIN_LOCATION_Y = 130;
+  var MAX_LOCATION_Y = 630;
+  var MAP_PIN_HEIGHT = 70;
+  var MAP_PIN_WIDTH = 60;
+  var MAP_PIN_HALFWIDTH = MAP_PIN_WIDTH / 2;
   var DefaultAddress = {
     X: 570,
     Y: 375
   };
   var setAddress = function () {
-    var offerAddressX = parseInt(window.map.mainMapPin.style.left, 10) + window.data.MAP_PIN_HALFWIDTH;
-    var offerAddressY = parseInt(window.map.mainMapPin.style.top, 10) + window.data.MAP_PIN_HEIGHT;
+    var PinCoordX = parseInt(window.map.mainPin.style.left, 10);
+    var PinCoordY = parseInt(window.map.mainPin.style.top, 10);
+    var offerAddressX = PinCoordX + MAP_PIN_HALFWIDTH;
+    var offerAddressY = Math.min(MAX_LOCATION_Y, Math.max(MIN_LOCATION_Y, PinCoordY));
     window.form.offerAddress.value = offerAddressX + ', ' + offerAddressY;
   };
 
   var setDefaultAddress = function () {
-    window.map.mainMapPin.style.left = DefaultAddress.X + 'px';
-    window.map.mainMapPin.style.top = DefaultAddress.Y + 'px';
+    window.map.mainPin.style.left = DefaultAddress.X + 'px';
+    window.map.mainPin.style.top = DefaultAddress.Y + 'px';
     setAddress();
   };
 
-  window.map.mainMapPin.addEventListener('mousedown', function (evt) {
+  window.map.mainPin.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
     var onMouseMove = function (moveEvt) {
       moveEvt.preventDefault();
 
-      var left = moveEvt.clientX - window.map.mainMap.offsetLeft - window.data.MAP_PIN_HALFWIDTH;
-      var top = moveEvt.clientY - window.map.mainMap.offsetTop;
-      window.map.mainMapPin.style.left = Math.min(window.map.mainMap.offsetWidth - window.data.MAP_PIN_HALFWIDTH, Math.max(-window.data.MAP_PIN_HALFWIDTH, left)) + 'px';
-      window.map.mainMapPin.style.top = Math.min(window.data.MAX_LOCATION_Y, Math.max(window.data.MIN_LOCATION_Y, top)) + 'px';
+      var left = moveEvt.clientX - window.map.main.offsetLeft - MAP_PIN_HALFWIDTH;
+      var top = moveEvt.clientY + window.pageYOffset - MAP_PIN_HEIGHT;
+      window.map.mainPin.style.left = Math.min(window.map.main.offsetWidth - MAP_PIN_HALFWIDTH, Math.max(-MAP_PIN_HALFWIDTH, left)) + 'px';
+      window.map.mainPin.style.top = Math.min(MAX_LOCATION_Y, Math.max(MIN_LOCATION_Y - MAP_PIN_HEIGHT, top)) + 'px';
       setAddress();
     };
 

@@ -9,7 +9,6 @@
 
   var adForm = document.querySelector('.ad-form');
   var adFormElements = adForm.querySelectorAll('.ad-form__element');
-  var mainMapPin = document.querySelector('.map__pin--main');
   var offerAddress = adForm.querySelector('#address');
 
   var housePrice = document.querySelector('#price');
@@ -19,21 +18,33 @@
   var roomSelect = document.querySelector('#room_number');
   var guestsSelect = document.querySelector('#capacity');
   var successMessageTemplate = document.querySelector('#success').content.querySelector('.success');
+  var resetButton = adForm.querySelector('.ad-form__reset');
 
+  var disableFormElements = function () {
+    window.util.disableElements(adFormElements);
+    window.util.disableElements(window.map.filterElements.selects);
+    window.util.disableElements(window.map.filterElements.features);
+  };
 
-  window.util.disableElements(adFormElements);
+  var enableFormElements = function () {
+    window.util.enableElements(adFormElements);
+    window.util.enableElements(window.map.filterElements.selects);
+    window.util.enableElements(window.map.filterElements.features);
+  };
 
-  var setMinPrice = function () {
+  disableFormElements();
+
+  var onHouseSelectChange = function () {
     housePrice.min = window.data.OffersMinPrice[houseSelect.value];
     housePrice.placeholder = housePrice.min;
   };
-  setMinPrice();
+  onHouseSelectChange();
 
   var syncSelects = function (firstSelect, secondSelect) {
     secondSelect.value = firstSelect.value;
   };
 
-  houseSelect.addEventListener('change', setMinPrice);
+  houseSelect.addEventListener('change', onHouseSelectChange);
 
   timeInSelect.addEventListener('change', function () {
     syncSelects(timeInSelect, timeOutSelect);
@@ -57,30 +68,37 @@
     }
 
     if (roomSelect.value === '100') {
-      guestsSelect.selectedIndex = 3;
+      guestsSelect.value = RoomsCapacity[roomSelect.value];
     }
 
   };
 
   var activatePage = function () {
-    window.util.enableElements(adFormElements);
-    window.map.mainMap.classList.remove('map--faded');
+    enableFormElements();
+    window.map.main.classList.remove('map--faded');
     adForm.classList.remove('ad-form--disabled');
     window.map.renderOffers(window.map.getFilteredOffers());
-    mainMapPin.removeEventListener('click', activatePage);
+    window.map.mainPin.removeEventListener('click', onMainPinClick);
     offerAddress.setAttribute('readonly', true);
     setCapacity();
   };
 
   var deactivatePage = function () {
-    window.card.closeCard();
-    window.util.disableElements(adFormElements);
-    window.map.mainMap.classList.add('map--faded');
+    window.card.close();
+    window.photos.setDefaultAvatar();
+    window.photos.clear();
+    disableFormElements();
+    window.map.main.classList.add('map--faded');
     adForm.classList.add('ad-form--disabled');
-    window.map.clearMap();
-    mainMapPin.addEventListener('click', activatePage);
+    window.map.clear();
+    window.map.clearFilters();
+    window.map.mainPin.addEventListener('click', onMainPinClick);
     adForm.reset();
     window.pin.setDefaultAddress();
+  };
+
+  var onMainPinClick = function () {
+    activatePage();
   };
 
   var onEscPress = function (evt) {
@@ -94,11 +112,15 @@
     closeSuccessMessage();
   };
 
-  var adFormSuccessHandler = function () {
+  var showSuccessMessage = function () {
     var successMessage = successMessageTemplate.cloneNode(true);
     successMessage.addEventListener('click', onMouseClick);
     document.addEventListener('keydown', onEscPress);
     document.body.insertBefore(successMessage, document.body.children[0]);
+  };
+
+  var onAdFormSubmit = function () {
+    showSuccessMessage();
     deactivatePage();
   };
 
@@ -112,17 +134,22 @@
   };
 
 
-  mainMapPin.addEventListener('click', activatePage);
-  roomSelect.addEventListener('change', setCapacity);
+  window.map.mainPin.addEventListener('click', onMainPinClick);
+  roomSelect.addEventListener('change', function () {
+    setCapacity();
+  });
 
   adForm.addEventListener('submit', function (evt) {
-    window.load.load(window.load.Url.FORM_URL, adFormSuccessHandler, window.util.errorHandler, window.load.Methods.POST, new FormData(adForm));
+    window.backend.load(window.backend.Url.FORM_URL, onAdFormSubmit, window.util.onError, window.backend.Methods.POST, new FormData(adForm));
     evt.preventDefault();
+  });
+
+  resetButton.addEventListener('click', function () {
+    deactivatePage();
   });
 
   window.form = {
     adForm: adForm,
-    houseSelect: houseSelect,
     adFormElements: adFormElements,
     offerAddress: offerAddress
   };

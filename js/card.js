@@ -1,8 +1,18 @@
 'use strict';
 (function () {
   var KeyCodes = window.util.KeyCodes;
-  var cardsContainer = window.map.mainMap.querySelector('.map__filters-container');
+  var cardsContainer = window.map.main.querySelector('.map__filters-container');
   var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
+  var offerCardElement = cardTemplate.cloneNode(true);
+  var offerTitle = offerCardElement.querySelector('.popup__title');
+  var offerAuthor = offerCardElement.querySelector('.popup__avatar');
+  var offerTextAddress = offerCardElement.querySelector('.popup__text--address');
+  var offerPrice = offerCardElement.querySelector('.popup__text--price');
+  var offerType = offerCardElement.querySelector('.popup__type');
+  var offerCapacity = offerCardElement.querySelector('.popup__text--capacity');
+  var offerTime = offerCardElement.querySelector('.popup__text--time');
+  var offerDescription = offerCardElement.querySelector('.popup__description');
+  var closeCardButton = offerCardElement.querySelector('.popup__close');
 
   var getOfferFeatures = function (card, data) {
     var features = card.querySelector('.popup__features');
@@ -51,18 +61,10 @@
   };
 
   var createCard = function (data) {
-    var offerCardElement = cardTemplate.cloneNode(true);
-    var offerTitle = offerCardElement.querySelector('.popup__title');
-    var offerAuthor = offerCardElement.querySelector('.popup__avatar');
-    var offerTextAddress = offerCardElement.querySelector('.popup__text--address');
-    var offerPrice = offerCardElement.querySelector('.popup__text--price');
-    var offerType = offerCardElement.querySelector('.popup__type');
-    var offerCapacity = offerCardElement.querySelector('.popup__text--capacity');
-    var offerTime = offerCardElement.querySelector('.popup__text--time');
-    var offerDescription = offerCardElement.querySelector('.popup__description');
-    var closeCardButton = offerCardElement.querySelector('.popup__close');
-
-    closeCardButton.addEventListener('click', closeCard);
+    closeCardButton.addEventListener('click', function (evt) {
+      evt.preventDefault();
+      closeCard();
+    });
     offerAuthor.src = data.author.avatar;
     offerTitle.textContent = data.offer.title;
     offerTextAddress.textContent = data.offer.address;
@@ -97,13 +99,13 @@
 
   var showCard = function (data) {
     closeCard();
-    window.map.mainMap.insertBefore(createCard(data), cardsContainer);
+    window.map.main.insertBefore(createCard(data), cardsContainer);
     document.addEventListener('keydown', onEscPressCard);
   };
 
   window.card = {
-    closeCard: closeCard,
-    showCard: showCard
+    close: closeCard,
+    show: showCard
   };
 
 })();

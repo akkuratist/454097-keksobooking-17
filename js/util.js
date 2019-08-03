@@ -20,12 +20,12 @@
   };
 
   var enableElements = function (elements) {
-    for (var i = 0; i < elements.length; i++) {
-      elements[i].removeAttribute('disabled');
-    }
+    elements.forEach(function (element) {
+      element.removeAttribute('disabled');
+    });
   };
 
-  var errorHandler = function () {
+  var onError = function () {
     var errorMessageTemplate = document.querySelector('#error').content.querySelector('.error');
     var errorMessage = errorMessageTemplate.cloneNode(true);
     var errorButton = errorMessage.querySelector('.error__button');
@@ -50,7 +50,7 @@
     getRandomNumber: getRandomNumber,
     disableElements: disableElements,
     enableElements: enableElements,
-    errorHandler: errorHandler,
+    onError: onError,
     KeyCodes: KeyCodes
   };
 })();
