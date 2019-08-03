@@ -1,19 +1,33 @@
 'use strict';
 (function () {
+  var MAX_PINS = 5;
+  var DEFAULT_FILTER_VALUE = 'any';
   var filters = document.querySelector('.map__filters');
-  var mainMap = document.querySelector('.map');
+  var filterElements = {
+    selects: filters.querySelectorAll('.map__filter'),
+    features: filters.querySelectorAll('input[name="features"]'),
+  };
+  var main = document.querySelector('.map');
   var similarOffersList = document.querySelector('.map__pins');
   var similarOfferPinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
-  var mainMapPin = document.querySelector('.map__pin--main');
+  var mainPin = document.querySelector('.map__pin--main');
   var pins = similarOffersList.querySelectorAll('.map__pin:not(.map__pin--main)');
 
   var offers = [];
-  var clearMap = function () {
-    window.card.closeCard();
+  var clear = function () {
+    window.card.close();
     var offerPins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
-
     offerPins.forEach(function (offerPin) {
       offerPin.remove();
+    });
+  };
+
+  var clearFilters = function () {
+    filterElements.selects.forEach(function (select) {
+      select.value = DEFAULT_FILTER_VALUE;
+    });
+    filterElements.features.forEach(function (feature) {
+      feature.removeAttribute('checked');
     });
   };
 
@@ -24,7 +38,7 @@
     offerElementImage.src = similarOffer.author.avatar;
     offerElementImage.alt = similarOffer.offer.description;
     offerElement.addEventListener('click', function () {
-      window.card.showCard(similarOffer);
+      window.show(similarOffer);
       offerElement.classList.add('map__pin--active');
     });
     return offerElement;
@@ -42,18 +56,18 @@
     var filteredOffers = offers.filter(function (offer) {
       return window.filters.filterOffers(offer);
     });
-    return filteredOffers.slice(0, 5);
+    return filteredOffers.slice(0, MAX_PINS);
   };
 
   var updateOffers = function () {
-    clearMap();
+    clear();
     renderOffers(getFilteredOffers());
   };
 
 
   filters.addEventListener('change', function (evt) {
     if (evt.target.name !== 'features') {
-      window.filters.filtersMap[evt.target.name](evt.target.value);
+      window.filters.Map[evt.target.name](evt.target.value);
     }
 
     window.debounce(updateOffers);
@@ -61,23 +75,26 @@
   });
 
 
-  var successHandler = function (data) {
+  var onSuccess = function (data) {
     offers = data;
     return offers;
   };
 
-  window.load.load(window.load.Url.DATA_URL, successHandler, window.util.errorHandler, window.load.Methods.GET);
+  window.backend.load(window.backend.Url.DATA_URL, onSuccess, window.util.onError, window.backend.Methods.GET);
 
   window.map = {
-    mainMap: mainMap,
+    main: main,
+    filters: filters,
+    filterElements: filterElements,
     pins: pins,
-    mainMapPin: mainMapPin,
+    mainPin: mainPin,
     getFilteredOffers: getFilteredOffers,
     renderOffers: renderOffers,
     similarOffersList: similarOffersList,
-    clearMap: clearMap,
+    clear: clear,
+    clearFilters: clearFilters,
     offers: offers,
-    successHandler: successHandler,
+    onSuccess: onSuccess,
     updateOffers: updateOffers
   };
 })();

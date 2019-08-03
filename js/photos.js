@@ -28,11 +28,11 @@
     avatarPreview.src = defaultAvatar;
   };
 
-  var clearPhotos = function () {
+  var clear = function () {
     var photos = Array.prototype.slice.call(housePhotoContainer.querySelectorAll('.ad-form__photo'));
-    if (photos.length > 1) {
+    if (photos.length >= 1) {
       photos.forEach(function (photo, index) {
-        if (index === 0) {
+        if (photo.querySelector('img') && index === 0) {
           (photo.querySelector('img')).remove();
         } else {
           photo.remove();
@@ -57,8 +57,8 @@
         fragment.appendChild(housePhotoPreview);
         housePhotoPreview = housePhotoPreview.cloneNode();
       }
-      housePhotoContainer.appendChild(fragment);
     });
+    housePhotoContainer.appendChild(fragment);
   };
 
   avatarChooser.addEventListener('change', function () {
@@ -74,6 +74,6 @@
 
   window.photos = {
     setDefaultAvatar: setDefaultAvatar,
-    clearPhotos: clearPhotos
+    clear: clear
   };
 })();

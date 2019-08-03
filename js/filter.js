@@ -48,7 +48,8 @@
   var filterByHousingPrice = function (it) {
     if (housingPrice === defaultValue) {
       return true;
-    } else if (housingPrice === 'high') {
+    }
+    if (housingPrice === 'high') {
       return it.offer.price >= Prices[housingPrice];
     }
     return it.offer.price >= Prices[housingPrice].min &&
@@ -83,8 +84,7 @@
 
   window.filters = {
     filterOffers: filterOffers,
-    housingType: housingType,
-    filtersMap: filtersMap
+    Map: filtersMap,
   };
 
 })();
