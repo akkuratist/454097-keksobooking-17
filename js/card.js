@@ -31,10 +31,10 @@
 
   var getRoomsText = function (rooms) {
     var roomsText = 'комнаты';
-    if (rooms % 10 === 1) {
+    if (rooms % 10 === 1 && rooms % 100 !== 11) {
       roomsText = 'комната';
     }
-    if (rooms % 10 === 0 || rooms % 10 >= 5) {
+    if (rooms % 10 === 0 || rooms % 10 >= 5 || rooms % 100 === 11) {
       roomsText = 'комнат';
     }
     return roomsText;
@@ -42,9 +42,7 @@
 
   var getGuestsText = function (guests) {
     var guestsText = 'гостей';
-    if (guests % 10 === 1) {
-      guestsText = 'гостя';
-    }
+    guestsText = guests % 10 === 1 ? guestsText = 'гостя' : guestsText = 'гостей';
     return guestsText;
   };
 

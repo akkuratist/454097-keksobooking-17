@@ -38,7 +38,7 @@
     offerElementImage.src = similarOffer.author.avatar;
     offerElementImage.alt = similarOffer.offer.description;
     offerElement.addEventListener('click', function () {
-      window.show(similarOffer);
+      window.card.show(similarOffer);
       offerElement.classList.add('map__pin--active');
     });
     return offerElement;
@@ -67,7 +67,7 @@
 
   filters.addEventListener('change', function (evt) {
     if (evt.target.name !== 'features') {
-      window.filters.Map[evt.target.name](evt.target.value);
+      window.filters.HousingMap[evt.target.name](evt.target.value);
     }
 
     window.debounce(updateOffers);

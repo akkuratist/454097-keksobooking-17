@@ -14,7 +14,7 @@
 
   var defaultValue = 'any';
 
-  var filtersMap = {
+  var HousingMap = {
     'housing-type': function (val) {
       housingType = val;
     },
@@ -84,7 +84,7 @@
 
   window.filters = {
     filterOffers: filterOffers,
-    Map: filtersMap,
+    HousingMap: HousingMap,
   };
 
 })();

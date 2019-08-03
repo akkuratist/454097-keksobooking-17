@@ -39,6 +39,7 @@
     var onMouseClick = function (evt) {
       evt.preventDefault();
       errorMessage.remove();
+      document.removeEventListener('keydown', onEscPress);
     };
     document.addEventListener('keydown', onEscPress);
     errorButton.addEventListener('click', onMouseClick);
